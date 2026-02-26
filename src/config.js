@@ -21,6 +21,9 @@ module.exports = {
     { key: "SUPERVISOR",label: "Supervisor",tag: "[Supervisor]" },
     { key: "MECANICO",  label: "Mecânico",  tag: "[Mecânico]" },
     { key: "APRENDIZ",  label: "Aprendiz",  tag: "[Aprendiz]" },
+    { key: "APROVADO",   label: "Aprovado",  tag: "[Aprovado]" },
+
+    { key: "CANDIDATO",   label: "Candidato",  tag: "[Candidato]" },
     { key: "CLIENTE",   label: "Cliente",   tag: "[Cliente]" },
     { key: "VISITANTE", label: "Visitante", tag: "[Visitante]" }
   ],
@@ -35,8 +38,10 @@ module.exports = {
   GERENTE: "1475626605580783739",
   SUPERVISOR: "1475626674535272679",
   MECANICO: "1475626767388512407",
-  APRENDIZ: "1475626817430884394",
+  CANDIDATO: "1476405376642711673",
   CLIENTE: "1475627167244222575",
+  APRENDIZ: "1475626817430884394",
+  APROVADO: "1476583808861212682",
   VISITANTE: "1475627860784840764"
 },
 
