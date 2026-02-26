@@ -40,3 +40,12 @@ CREATE TABLE IF NOT EXISTS weekly_stats (
   service_ms INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (guild_id, week_key, user_id)
 );
+
+CREATE TABLE IF NOT EXISTS tag_rules (
+  guild_id TEXT NOT NULL,
+  role_id TEXT NOT NULL,
+  tag TEXT NOT NULL,
+  priority INTEGER NOT NULL DEFAULT 0,
+  enabled INTEGER NOT NULL DEFAULT 1,
+  PRIMARY KEY (guild_id, role_id)
+);

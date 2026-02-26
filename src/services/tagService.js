@@ -3,9 +3,12 @@ const { normalizeText } = require("../utils/text");
 const { hierarchy, roleIds } = require("../config");
 
 class TagService {
-  constructor(db) {
+  constructor(db, tagRulesService) {
     this.db = db;
+    this.tagRulesService = tagRulesService;
 
+    
+    
     this.knownTags = hierarchy.map(h => h.tag);
 
     this.stmtUpsertMember = db.prepare(`
@@ -31,6 +34,28 @@ class TagService {
     };
   }
 
+    /**
+   * NOVO: resolve a TAG usando regras do banco (tag_rules).
+   * - pega regras do servidor ordenadas por prioridade DESC
+   * - encontra a primeira regra cujo role_id o membro possui
+   */
+  resolveTagForMemberByRules(member) {
+    if (!this.tagRulesService) return null;
+
+    const rules = this.tagRulesService.listRules(member.guild.id);
+
+    // só usa regras habilitadas
+    const enabled = rules.filter(r => Number(r.enabled) === 1);
+
+    for (const rule of enabled) {
+      if (member.roles.cache.has(rule.role_id)) {
+        return rule.tag; // primeira bate = maior prioridade
+      }
+    }
+
+    return null;
+  }
+  
   resolveTagForMember(member) {
     for (const level of hierarchy) {
       const id = roleIds[level.key];
@@ -68,7 +93,9 @@ class TagService {
     const guildId = member.guild.id;
     const userId = member.id;
 
-    const tag = this.resolveTagForMember(member);
+    // 1) tenta regras dinâmicas do banco
+    // 2) se não houver regras, cai no fallback antigo (hierarchy/aliases)
+    const tag = this.resolveTagForMemberByRules(member) ?? this.resolveTagForMember(member);
 
     const currentDisplay =
       member.nickname ??

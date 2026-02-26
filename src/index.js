@@ -24,6 +24,7 @@ const { PunchService } = require("./services/punchService");
 const { OSService } = require("./services/osService");
 const { RankingService } = require("./services/rankingService");
 const { TagService } = require("./services/tagService");
+const { TagRulesService } = require("./services/tagRulesService");
 
 const { scheduleWeeklyReset } = require("./jobs/weeklyReset");
 const { KeyedQueue } = require("./utils/queue");
@@ -31,6 +32,7 @@ const { logger } = require("./utils/logger");
 const { makeEmbed } = require("./utils/embeds");
 const { brand } = require("./config");
 const { formatDuration, getWeekKey } = require("./utils/time");
+
 
 const TOKEN = process.env.DISCORD_TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -58,7 +60,8 @@ const db = initDatabase();
 client.punchService = new PunchService(db);
 client.osService = new OSService(db);
 client.rankingService = new RankingService(db);
-client.tagService = new TagService(db);
+client.tagRulesService = new TagRulesService(db);
+client.tagService = new TagService(db, client.tagRulesService);
 
 // Router (Buttons/Select/Modal)
 client.router = {
